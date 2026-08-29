@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Smart — Chlamydiae &amp; Actinomycetes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#12142b;
+  --bg-2:#0d0f22;
+  --surface:#1c1f3d;
+  --surface-2:#262b52;
+  --line:#363b6e;
+  --ink:#f0ece2;
+  --muted:#9ba0c9;
+  --eb-violet:#8b5cf6;
+  --eb-violet-dim:#6d46d1;
+  --rb-blue:#38bdf8;
+  --giemsa:#ec4899;
+  --cream:#f2ecd8;
+  --ok:#34d399;
+  --bad:#f87171;
+  --radius:18px;
+  --font-display:"Fraunces", serif;
+  --font-body:"Inter", sans-serif;
+  --font-mono:"IBM Plex Mono", monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(139,92,246,0.18), transparent 60%),
+    radial-gradient(1000px 700px at 110% 10%, rgba(56,189,248,0.14), transparent 55%),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--eb-violet); color:#fff;}
+
+/* ---------- header ---------- */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  backdrop-filter:blur(10px);
+  background:rgba(13,15,34,0.85);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:1180px; margin:0 auto; padding:18px 24px 0 24px;
+}
+.brand{
+  display:flex; align-items:center; gap:14px; margin-bottom:14px;
+}
+.brand-mark{
+  width:40px; height:40px; border-radius:50%;
+  background:
+    conic-gradient(from 200deg, var(--eb-violet), var(--rb-blue), var(--giemsa), var(--eb-violet));
+  box-shadow:0 0 0 3px rgba(240,236,226,0.08), 0 0 22px rgba(139,92,246,0.5);
+  flex:none;
+}
+.brand h1{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:26px;
+  letter-spacing:0.3px;
+  margin:0;
+}
+.brand h1 em{
+  font-style:italic;
+  color:var(--rb-blue);
+}
+.brand p{
+  margin:2px 0 0 0;
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+nav.tabs{
+  display:flex; gap:6px; overflow-x:auto; padding-bottom:0;
+  scrollbar-width:none;
+}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tab-btn{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  letter-spacing:0.05em;
+  color:var(--muted);
+  background:transparent;
+  border:none;
+  padding:12px 16px 14px 16px;
+  cursor:pointer;
+  white-space:nowrap;
+  border-bottom:3px solid transparent;
+  transition:color .18s ease, border-color .18s ease;
+}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{
+  color:var(--ink);
+  border-bottom-color:var(--eb-violet);
+}
+.tab-btn .num{
+  color:var(--rb-blue);
+  margin-right:8px;
+}
+
+/* ---------- layout ---------- */
+main{max-width:1180px; margin:0 auto; padding:36px 24px 80px 24px;}
+.panel{display:none; animation:rise .35s ease;}
+.panel.active{display:block;}
+@keyframes rise{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+.section-head{margin-bottom:26px;}
+.section-head .eyebrow{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--rb-blue); display:block; margin-bottom:8px;
+}
+.section-head h2{
+  font-family:var(--font-display); font-size:32px; margin:0 0 8px 0; font-weight:600;
+}
+.section-head p{color:var(--muted); max-width:640px; margin:0; line-height:1.55; font-size:14.5px;}
+
+/* ---------- Overview ---------- */
+.overview-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(270px,1fr)); gap:16px;
+}
+.rule-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:20px 20px 18px 20px; position:relative; overflow:hidden;
+}
+.rule-card::before{
+  content:""; position:absolute; top:0; left:0; width:4px; height:100%;
+  background:var(--accent, var(--eb-violet));
+}
+.rule-card h3{
+  font-family:var(--font-display); font-size:17px; margin:0 0 10px 0; font-weight:600;
+  display:flex; align-items:center; gap:8px;
+}
+.rule-card h3 .dot{width:8px; height:8px; border-radius:50%; background:var(--accent, var(--eb-violet)); flex:none;}
+.rule-card ul{margin:0; padding-left:18px; font-size:13.6px; line-height:1.65; color:#dcd9ee;}
+.rule-card li{margin-bottom:6px;}
+.rule-card li b{color:var(--cream); font-weight:600;}
+
+/* ---------- Diagrams ---------- */
+.diagram-block{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:26px; margin-bottom:22px;
+}
+.diagram-block h3{
+  font-family:var(--font-display); font-size:19px; margin:0 0 4px 0;
+}
+.diagram-block .hint{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin:0 0 18px 0;}
+
+/* cycle diagram */
+.cycle-wrap{position:relative; width:100%; max-width:560px; aspect-ratio:1/1; margin:0 auto;}
+.cycle-center{
+  position:absolute; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #2c3163, #14162e);
+  border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  font-family:var(--font-mono); color:var(--muted); padding:6%;
+  z-index:1;
+}
+.cycle-node{
+  position:absolute; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  font-family:var(--font-mono); font-weight:600; color:#fff;
+  cursor:pointer; border:2px solid rgba(255,255,255,0.15);
+  transition:transform .18s ease, box-shadow .18s ease, left .18s ease, top .18s ease;
+  padding:4%;
+}
+.cycle-node:hover, .cycle-node.active{transform:scale(1.08); box-shadow:0 0 0 4px rgba(255,255,255,0.08);}
+.cycle-node span{pointer-events:none;}
+.cycle-detail{
+  margin-top:18px; background:var(--surface-2); border:1px solid var(--line);
+  border-radius:14px; padding:16px 18px; font-size:13.8px; line-height:1.6; color:#dedaf0;
+  min-height:60px;
+}
+.cycle-detail b{color:var(--rb-blue);}
+
+/* compare toggle */
+.compare-toggle{display:flex; gap:8px; margin-bottom:16px;}
+.compare-toggle button{
+  font-family:var(--font-mono); font-size:12px; padding:8px 14px; border-radius:999px;
+  border:1px solid var(--line); background:var(--surface-2); color:var(--muted); cursor:pointer;
+}
+.compare-toggle button.active{background:var(--eb-violet); color:#fff; border-color:var(--eb-violet);}
+.compare-table{width:100%; border-collapse:collapse; font-size:13.6px;}
+.compare-table th{
+  text-align:left; font-family:var(--font-mono); font-size:11px; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--muted); padding:10px 12px; border-bottom:1px solid var(--line);
+}
+.compare-table td{padding:12px; border-bottom:1px solid rgba(255,255,255,0.06); vertical-align:top; line-height:1.5;}
+.compare-table tr:hover td{background:rgba(255,255,255,0.03);}
+.pill{display:inline-block; padding:2px 9px; border-radius:999px; font-family:var(--font-mono); font-size:11px;}
+.pill.eb{background:rgba(139,92,246,.18); color:#c4b0ff;}
+.pill.rb{background:rgba(56,189,248,.18); color:#a9e4fb;}
+.compare-table td, .compare-table th{transition:opacity .18s ease, background .18s ease;}
+.compare-table.focus-eb td:nth-child(3){opacity:.3;}
+.compare-table.focus-eb td:nth-child(2){background:rgba(139,92,246,0.08);}
+.compare-table.focus-rb td:nth-child(2){opacity:.3;}
+.compare-table.focus-rb td:nth-child(3){background:rgba(56,189,248,0.08);}
+
+/* sterilization tree */
+.tree{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+@media(max-width:640px){.tree{grid-template-columns:1fr;}}
+.tree-col h4{font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--giemsa); margin:0 0 10px 0;}
+.tree-item{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+  padding:10px 12px; margin-bottom:8px; cursor:pointer; font-size:13px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.tree-item:hover{border-color:var(--rb-blue);}
+.tree-item .exp{
+  display:none; font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.5;
+}
+.tree-item.open .exp{display:block;}
+.tree-item .caret{transition:transform .15s ease; color:var(--muted); flex:none;}
+.tree-item.open .caret{transform:rotate(90deg);}
+
+/* ---------- Mini Map ---------- */
+.minimap-wrap{
+  display:grid; grid-template-columns:280px 1fr; gap:0;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; min-height:480px;
+}
+@media(max-width:760px){.minimap-wrap{grid-template-columns:1fr;}}
+.mm-index{
+  border-right:1px solid var(--line); background:var(--bg-2); padding:10px;
+  max-height:640px; overflow-y:auto;
+}
+@media(max-width:760px){.mm-index{border-right:none; border-bottom:1px solid var(--line);}}
+.mm-label{
+  font-family:var(--font-mono); font-size:12.5px; padding:12px 12px;
+  border-radius:8px; cursor:pointer; color:var(--muted); margin-bottom:2px;
+  display:flex; align-items:center; gap:8px; border-left:3px solid transparent;
+}
+.mm-label:hover{background:rgba(255,255,255,0.04); color:var(--ink);}
+.mm-label.active{background:rgba(139,92,246,0.14); color:var(--ink); border-left-color:var(--eb-violet);}
+.mm-label .tag{
+  width:7px; height:7px; border-radius:50%; flex:none; background:var(--rb-blue);
+}
+.mm-viewer{padding:30px 32px;}
+.mm-viewer h3{font-family:var(--font-display); font-size:22px; margin:0 0 14px 0;}
+.mm-viewer .body{font-size:14.3px; line-height:1.75; color:#e1ddef;}
+.mm-viewer .body b{color:var(--cream);}
+.mm-empty{color:var(--muted); font-family:var(--font-mono); font-size:13px;}
+
+/* ---------- Flash cards ---------- */
+.fc-controls{display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap:wrap;}
+.fc-controls select{
+  background:var(--surface-2); color:var(--ink); border:1px solid var(--line);
+  border-radius:8px; padding:8px 10px; font-family:var(--font-mono); font-size:12.5px;
+}
+.fc-counter{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+.fc-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:18px;}
+.fc-card{
+  perspective:1200px; height:190px; cursor:pointer;
+}
+.fc-inner{
+  position:relative; width:100%; height:100%; transition:transform .5s cubic-bezier(.4,.2,.2,1);
+  transform-style:preserve-3d;
+}
+.fc-card.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{
+  position:absolute; inset:0; -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  border-radius:16px; padding:18px; display:flex; flex-direction:column; justify-content:center;
+  border:1px solid var(--line);
+}
+.fc-front{
+  background:radial-gradient(circle at 30% 20%, rgba(139,92,246,0.25), var(--surface) 65%);
+}
+.fc-front .k{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--rb-blue); margin-bottom:8px;}
+.fc-front .q{font-family:var(--font-display); font-size:16.5px; line-height:1.35; font-weight:600;}
+.fc-back{
+  background:radial-gradient(circle at 70% 80%, rgba(236,72,153,0.22), var(--surface-2) 65%);
+  transform:rotateY(180deg);
+}
+.fc-back .a{font-size:13.3px; line-height:1.55; color:#eee9f7;}
+.fc-hint{position:absolute; bottom:10px; right:14px; font-family:var(--font-mono); font-size:9.5px; color:var(--muted);}
+
+/* ---------- Quiz ---------- */
+.quiz-top{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;}
+.quiz-score{
+  font-family:var(--font-mono); font-size:13px; background:var(--surface-2); border:1px solid var(--line);
+  padding:8px 14px; border-radius:999px;
+}
+.quiz-score b{color:var(--ok);}
+.quiz-actions button{
+  font-family:var(--font-mono); font-size:12px; padding:9px 16px; border-radius:999px;
+  border:1px solid var(--eb-violet); background:transparent; color:var(--ink); cursor:pointer;
+}
+.quiz-actions button:hover{background:var(--eb-violet);}
+.q-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:20px 22px; margin-bottom:14px;
+}
+.q-card .qnum{font-family:var(--font-mono); font-size:11px; color:var(--rb-blue); margin-bottom:6px; display:block;}
+.q-card .qtext{font-family:var(--font-display); font-size:16px; margin:0 0 14px 0; line-height:1.4;}
+.q-opts{display:grid; gap:8px;}
+.q-opt{
+  text-align:left; padding:10px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--surface-2); color:#e6e3f2; font-size:13.6px; cursor:pointer;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.q-opt:hover{border-color:var(--rb-blue);}
+.q-opt .letter{font-family:var(--font-mono); color:var(--muted); flex:none;}
+.q-opt.correct{background:rgba(52,211,153,0.14); border-color:var(--ok);}
+.q-opt.wrong{background:rgba(248,113,113,0.14); border-color:var(--bad);}
+.q-opt.disabled{cursor:default;}
+
+footer{
+  border-top:1px solid var(--line); margin-top:60px; padding:28px 24px;
+  text-align:center; font-family:var(--font-mono); font-size:11.5px; color:var(--muted);
+}
+footer b{color:var(--cream);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <h1>Study <em>Smart</em></h1>
+        <p>Chlamydiae &amp; Actinomycetes — Medical Microbiology, Lec. 7</p>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-target="overview"><span class="num">01</span>Overview</button>
+      <button class="tab-btn" data-target="diagrams"><span class="num">02</span>Diagrams</button>
+      <button class="tab-btn" data-target="minimap"><span class="num">03</span>Mini Map</button>
+      <button class="tab-btn" data-target="flashcards"><span class="num">04</span>Flash Cards</button>
+      <button class="tab-btn" data-target="quiz"><span class="num">05</span>Quiz Bank</button>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+  <!-- ================= 1. OVERVIEW ================= -->
+  <section id="overview" class="panel active">
+    <div class="section-head">
+      <span class="eyebrow">Section 01</span>
+      <h2>Overview</h2>
+      <p>The rules, definitions and facts worth knowing cold — not the full lecture, just what carries the exam.</p>
+    </div>
+    <div class="overview-grid">
+
+      <div class="rule-card" style="--accent:#8b5cf6">
+        <h3><span class="dot"></span>Chlamydia — core facts</h3>
+        <ul>
+          <li>Three human species: <b>C. trachomatis</b>, <b>C. pneumoniae</b>, <b>C. psittaci</b>.</li>
+          <li>Split by antigenic composition, inclusions, sulfonamide susceptibility, disease.</li>
+          <li>Genus-specific antigen = heat-stable <b>LPS with KDO</b> (2-keto-3-deoxyoctanoic acid).</li>
+          <li>Viewed as Gram-negative but <b>cannot make their own ATP</b> → obligate intracellular parasites.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#38bdf8">
+        <h3><span class="dot"></span>EB vs RB</h3>
+        <ul>
+          <li><b>EB (Elementary Body)</b>: extracellular, infectious, metabolically inactive.</li>
+          <li><b>RB (Reticulate Body)</b>: intracellular, metabolically active, replicating — the "energy parasite."</li>
+          <li>RB makes its own nucleic acid, lipids, proteins — but <b>not ATP</b>.</li>
+          <li>Cycle: attach → uptake → EB→RB → binary fission/inclusion → RB→EB → release.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#ec4899">
+        <h3><span class="dot"></span>Staining</h3>
+        <ul>
+          <li><b>EB stains purple</b> with Giemsa (host cytoplasm stains blue).</li>
+          <li><b>RB stains blue</b> with Giemsa (larger, non-infective).</li>
+          <li>Gram reaction is <b>negative/variable</b> — not useful for ID.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#8b5cf6">
+        <h3><span class="dot"></span>C. trachomatis — ocular</h3>
+        <ul>
+          <li><b>Trachoma</b> = chronic kerato-conjunctivitis, serovars <b>A, B, C</b>.</li>
+          <li>Incubation <b>3–10 days</b>; lacrimation, mucopurulent discharge, conjunctival hyperemia.</li>
+          <li>Progresses to scarring, eyelid deformity, blindness with 2° bacterial infection.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#38bdf8">
+        <h3><span class="dot"></span>C. trachomatis — genital</h3>
+        <ul>
+          <li>Men: <b>non-gonococcal urethritis</b>.</li>
+          <li>Women: urethritis, cervicitis, <b>PID</b> → sterility, ectopic pregnancy risk.</li>
+          <li>Neonate infected passing through birth canal — <b>20–60%</b> of exposed infants infected.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#ec4899">
+        <h3><span class="dot"></span>Virulence factors (CT)</h3>
+        <ul>
+          <li><b>Tarp</b>: actin rearrangement → endocytic uptake.</li>
+          <li>Inclusion-membrane proteins <b>block lysosome fusion</b>.</li>
+          <li>Secreted proteins interfere with <b>NF-κB</b> signaling (innate immunity).</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#8b5cf6">
+        <h3><span class="dot"></span>Diagnosis &amp; Rx (CT / CP)</h3>
+        <ul>
+          <li>Specimen must contain <b>infected cells</b>, not just secretions.</li>
+          <li>Best test: <b>PCR</b> (nucleic acid detection) &gt; culture &gt; serology.</li>
+          <li><b>Azithromycin</b> — safe in pregnancy; <b>doxycycline</b> otherwise.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#38bdf8">
+        <h3><span class="dot"></span>C. pneumoniae</h3>
+        <ul>
+          <li>Humans = only known host; often <b>asymptomatic/mild</b>.</li>
+          <li>Pharyngitis common; sinusitis/otitis media may accompany lower airway disease.</li>
+          <li>Rx: <b>macrolides, tetracyclines</b>, some fluoroquinolones.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#ec4899">
+        <h3><span class="dot"></span>C. psittaci — psittacosis</h3>
+        <ul>
+          <li>Acquired from <b>birds</b>; enters via respiratory tract.</li>
+          <li>Range: mild → severe pneumonia/sepsis; mortality up to <b>20%</b> untreated (esp. elderly).</li>
+          <li>Culture is dangerous → prefer <b>immunoassay/PCR</b>; often treated on clinical grounds.</li>
+          <li>Rx: azithromycin, clarithromycin, erythromycin (± doxycycline in adults).</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#8b5cf6">
+        <h3><span class="dot"></span>Actinomycetes</h3>
+        <ul>
+          <li>Anaerobic, <b>Gram-positive</b>, branching filaments (fungus-like) — mostly commensal/saprophyte.</li>
+          <li>Endogenous infection, e.g. after dental extraction → <b>actinomycosis</b>.</li>
+          <li>Classic sign: painless hard swelling with sulfur-granule abscess — <b>"lumpy jaw"</b> (cervicofacial form).</li>
+          <li>Key genera: Actinomyces, Nocardia, Actinomadura, Streptomyces.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#38bdf8">
+        <h3><span class="dot"></span>Sterilization vs Disinfection</h3>
+        <ul>
+          <li><b>Sterilization</b>: kills ALL microbial life, including spores.</li>
+          <li><b>Disinfection</b>: kills pathogens, spores not guaranteed.</li>
+          <li><b>Disinfectant</b> → non-living surfaces. <b>Antiseptic</b> → living tissue.</li>
+          <li>Physical: moist/dry heat, filtration, irradiation, sonic waves, pressure, sunlight.</li>
+        </ul>
+      </div>
+
+      <div class="rule-card" style="--accent:#ec4899">
+        <h3><span class="dot"></span>Ideal disinfectant</h3>
+        <ul>
+          <li>Wide spectrum; works despite organic matter; active at any pH.</li>
+          <li>Non-toxic, non-corrosive, non-allergenic; stable on storage.</li>
+          <li>Fast-acting, high penetrating power, long shelf life.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= 2. DIAGRAMS ================= -->
+  <section id="diagrams" class="panel">
+    <div class="section-head">
+      <span class="eyebrow">Section 02</span>
+      <h2>Interactive Diagrams</h2>
+      <p>Every figure from the lecture, rebuilt to respond to a click or tap.</p>
+    </div>
+
+    <div class="diagram-block">
+      <h3>The Chlamydial Developmental Cycle</h3>
+      <p class="hint">CLICK EACH NODE, IN ORDER OR NOT — DETAIL APPEARS BELOW</p>
+      <div class="cycle-wrap" id="cycleWrap">
+        <div class="cycle-center">Host<br>epithelial<br>cell</div>
+      </div>
+      <div class="cycle-detail" id="cycleDetail">Click a step on the wheel to read what happens at that stage.</div>
+    </div>
+
+    <div class="diagram-block">
+      <h3>Elementary Body vs Reticulate Body</h3>
+      <p class="hint">CLICK A SIDE TO SPOTLIGHT IT</p>
+      <div class="compare-toggle">
+        <button class="active" data-filter="all">Compare both</button>
+        <button data-filter="eb">Spotlight EB</button>
+        <button data-filter="rb">Spotlight RB</button>
+      </div>
+      <table class="compare-table" id="compareTable">
+        <thead><tr><th>Feature</th><th>Elementary Body (EB)</th><th>Reticulate Body (RB)</th></tr></thead>
+        <tbody>
+          <tr><td>Location</td><td><span class="pill eb">EB</span> Extracellular</td><td><span class="pill rb">RB</span> Intracellular</td></tr>
+          <tr><td>Infectivity</td><td>Infective form</td><td>Non-infective</td></tr>
+          <tr><td>Metabolic state</td><td>Metabolically inactive</td><td>Metabolically active</td></tr>
+          <tr><td>Giemsa stain</td><td>Purple</td><td>Blue</td></tr>
+          <tr><td>Size</td><td>Smaller, compact</td><td>Larger</td></tr>
+          <tr><td>ATP synthesis</td><td>None</td><td>None — uses host ATP ("energy parasite")</td></tr>
+          <tr><td>Function</td><td>Attaches to host receptors, gets taken up</td><td>Replicates by binary fission, forms inclusion</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="diagram-block">
+      <h3>Sterilization — Physical vs Chemical Methods</h3>
+      <p class="hint">CLICK ANY METHOD TO EXPAND</p>
+      <div class="tree">
+        <div class="tree-col">
+          <h4>Physical methods</h4>
+          <div class="tree-item"><div class="row"><span>Moist heat sterilization <span class="caret">▸</span></span></div><div class="exp">Below 100°C, at 100°C, and above 100°C (e.g. autoclaving) — most reliable for killing spores.</div></div>
+          <div class="tree-item"><div class="row"><span>Dry heat sterilization <span class="caret">▸</span></span></div><div class="exp">Red heat, flaming, incineration, infrared radiation, hot air oven.</div></div>
+          <div class="tree-item"><div class="row"><span>Filtration <span class="caret">▸</span></span></div><div class="exp">Filtration sterilization of liquids and of gases — removes rather than kills organisms.</div></div>
+          <div class="tree-item"><div class="row"><span>Irradiation <span class="caret">▸</span></span></div><div class="exp">Ultraviolet (non-ionizing) radiation and ionizing radiation.</div></div>
+          <div class="tree-item"><div class="row"><span>Other physical <span class="caret">▸</span></span></div><div class="exp">Sound (sonic) waves, pressure (pascalization), sunlight (solar disinfection).</div></div>
+        </div>
+        <div class="tree-col">
+          <h4>Chemical methods</h4>
+          <div class="tree-item"><div class="row"><span>Chemisterilants <span class="caret">▸</span></span></div><div class="exp">Chemicals strong enough to sterilize completely, including spores.</div></div>
+          <div class="tree-item"><div class="row"><span>Disinfectants <span class="caret">▸</span></span></div><div class="exp">Applied to surfaces of non-living objects to destroy microorganisms.</div></div>
+          <div class="tree-item"><div class="row"><span>Antiseptics <span class="caret">▸</span></span></div><div class="exp">Safe on living tissue; prevent infection by inhibiting microbial growth.</div></div>
+          <div class="tree-item"><div class="row"><span>Ideal properties <span class="caret">▸</span></span></div><div class="exp">Wide spectrum, active with organic matter present, active at any pH, non-toxic, stable, fast, high penetrating power.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 3. MINI MAP ================= -->
+  <section id="minimap" class="panel">
+    <div class="section-head">
+      <span class="eyebrow">Section 03</span>
+      <h2>Mini Map</h2>
+      <p>Click a title on the left — the full note opens on the right, right here.</p>
+    </div>
+    <div class="minimap-wrap">
+      <div class="mm-index" id="mmIndex"></div>
+      <div class="mm-viewer" id="mmViewer">
+        <p class="mm-empty">Select a topic from the list to view its note.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 4. FLASH CARDS ================= -->
+  <section id="flashcards" class="panel">
+    <div class="section-head">
+      <span class="eyebrow">Section 04</span>
+      <h2>Flash Cards</h2>
+      <p>Tap a card to flip it. Covers the full lecture — Chlamydia, Actinomycetes and Sterilization.</p>
+    </div>
+    <div class="fc-controls">
+      <select id="fcFilter">
+        <option value="all">All topics</option>
+        <option value="general">Chlamydia — general</option>
+        <option value="trachomatis">C. trachomatis</option>
+        <option value="pneumoniae">C. pneumoniae</option>
+        <option value="psittaci">C. psittaci</option>
+        <option value="actino">Actinomycetes</option>
+        <option value="steril">Sterilization</option>
+      </select>
+      <span class="fc-counter" id="fcCounter"></span>
+    </div>
+    <div class="fc-grid" id="fcGrid"></div>
+  </section>
+
+  <!-- ================= 5. QUIZ BANK ================= -->
+  <section id="quiz" class="panel">
+    <div class="section-head">
+      <span class="eyebrow">Section 05</span>
+      <h2>Quiz Bank</h2>
+      <p>30+ MCQs. Answer order is reshuffled every time you load or reset the bank.</p>
+    </div>
+    <div class="quiz-top">
+      <div class="quiz-score">Score: <b id="scoreVal">0</b> / <span id="scoreTotal">0</span> answered</div>
+      <div class="quiz-actions"><button id="resetQuiz">Reshuffle &amp; Reset</button></div>
+    </div>
+    <div id="quizList"></div>
+  </section>
+
+</main>
+
+<footer>© <span id="year"></span> <b>Anmar Taha</b>. All rights reserved. — Study Smart, built from Medical Microbiology Lec. 7</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------------- Tab switching ---------------- */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.panel');
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.target).classList.add('active');
+  });
+});
+
+/* ---------------- Cycle diagram ---------------- */
+const cycleSteps = [
+  {n:1, title:"Attachment & uptake", color:"#8b5cf6", detail:"<b>Step 1 — Attachment and uptake:</b> The elementary body (EB) attaches to specific receptors on the host cell (e.g. squamous epithelial cells) and is taken up. At this point it is still metabolically inactive."},
+  {n:2, title:"Transform to RB", color:"#7c6ae0", detail:"<b>Step 2 — Transform to reticulate body:</b> Inside the host cell, the EB converts into the metabolically active reticulate body (RB)."},
+  {n:3, title:"Binary fission / inclusion", color:"#6a79dc", detail:"<b>Step 3 — Reticulate body divides:</b> The RB divides repeatedly by binary fission, forming an intracytoplasmic inclusion body."},
+  {n:4, title:"Transform back to EB", color:"#4f93d8", detail:"<b>Step 4 — Transform back to elementary bodies:</b> Some of the newly formed reticulate bodies convert back into infectious elementary bodies."},
+  {n:5, title:"Release of EBs", color:"#38bdf8", detail:"<b>Step 5 — Release of elementary bodies:</b> EBs are released from the host cell, ready to infect new cells and continue the cycle."},
+  {n:6, title:"Persistent infection", color:"#ec4899", detail:"<b>Step 6 — Persistent infection:</b> Under stress, large aberrant reticulate bodies can form, leading to a persistent, low-level infection."},
+  {n:7, title:"Return to normal cycle", color:"#c2409a", detail:"<b>Step 7 — Return to normal cycle:</b> When conditions allow, the aberrant forms revert and the standard developmental cycle resumes."}
+];
+const cycleWrap = document.getElementById('cycleWrap');
+const cycleCenterEl = cycleWrap.querySelector('.cycle-center');
+cycleSteps.forEach((s,i)=>{
+  const node = document.createElement('div');
+  node.className='cycle-node';
+  node.style.background = `linear-gradient(145deg, ${s.color}, #14162e)`;
+  node.innerHTML = `<span>${s.n}. ${s.title}</span>`;
+  node.addEventListener('click', ()=>{
+    document.querySelectorAll('.cycle-node').forEach(n=>n.classList.remove('active'));
+    node.classList.add('active');
+    document.getElementById('cycleDetail').innerHTML = s.detail;
+  });
+  cycleWrap.appendChild(node);
+});
+const cycleNodeEls = Array.from(document.querySelectorAll('.cycle-node'));
+
+function layoutCycle(){
+  const size = cycleWrap.clientWidth;
+  if(!size) return; // container hidden (panel not active yet) — nothing to measure
+  const nodeSize = Math.max(52, size*0.175);
+  const centerSize = size*0.27;
+  const fontSize = Math.max(9.5, size*0.0205);
+  const radius = size/2 - nodeSize/2 - size*0.015;
+  const mid = size/2;
+
+  cycleCenterEl.style.width = centerSize+'px';
+  cycleCenterEl.style.height = centerSize+'px';
+  cycleCenterEl.style.left = (mid - centerSize/2)+'px';
+  cycleCenterEl.style.top = (mid - centerSize/2)+'px';
+  cycleCenterEl.style.fontSize = fontSize+'px';
+
+  cycleNodeEls.forEach((node,i)=>{
+    const angle = (i/cycleSteps.length)*2*Math.PI - Math.PI/2;
+    const x = mid + radius*Math.cos(angle) - nodeSize/2;
+    const y = mid + radius*Math.sin(angle) - nodeSize/2;
+    node.style.width = nodeSize+'px';
+    node.style.height = nodeSize+'px';
+    node.style.left = x+'px';
+    node.style.top = y+'px';
+    node.style.fontSize = fontSize+'px';
+  });
+}
+layoutCycle();
+window.addEventListener('resize', layoutCycle);
+// re-measure once the Diagrams tab is actually shown, since a hidden panel has 0 width
+document.querySelector('.tab-btn[data-target="diagrams"]').addEventListener('click', ()=> requestAnimationFrame(layoutCycle));
+
+/* ---------------- Compare table filter ---------------- */
+document.querySelectorAll('.compare-toggle button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.compare-toggle button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    const table = document.getElementById('compareTable');
+    table.classList.remove('focus-eb','focus-rb');
+    if(f==='eb') table.classList.add('focus-eb');
+    if(f==='rb') table.classList.add('focus-rb');
+  });
+});
+
+/* ---------------- Sterilization tree ---------------- */
+document.querySelectorAll('.tree-item').forEach(item=>{
+  item.addEventListener('click', ()=> item.classList.toggle('open'));
+});
+
+/* ---------------- Mini Map ---------------- */
+const mmTopics = [
+  {t:"Chlamydia — what they are", body:"Chlamydia that infect humans fall into three species: <b>C. trachomatis, C. pneumoniae, C. psittaci</b>, separated by antigenic composition, intracellular inclusions, sulfonamide susceptibility, and disease produced. All share a genus-specific heat-stable LPS antigen containing KDO, detectable by immunofluorescence."},
+  {t:"Why they're obligate intracellular", body:"Chlamydiae are Gram-negative in structure but <b>lack the machinery to make their own ATP</b>. Because they cannot generate metabolic energy, they are restricted to living inside host cells — true obligate intracellular parasites."},
+  {t:"The two developmental forms", body:"Every chlamydial infection cycles between the <b>elementary body (EB)</b> — extracellular, infectious, metabolically inactive — and the <b>reticulate body (RB)</b> — intracellular, metabolically active, and capable of replication by binary fission inside an inclusion."},
+  {t:"Staining behavior", body:"Under Giemsa stain, <b>EBs appear purple</b> against a blue host cytoplasm, while the larger, non-infective <b>RBs stain blue</b>. Gram staining is negative or variable and is not diagnostically useful for chlamydiae."},
+  {t:"Trachoma", body:"An ancient, chronic kerato-conjunctivitis caused by <b>C. trachomatis serovars A, B, C</b>. Incubation is 3–10 days; early signs are lacrimation, mucopurulent discharge, and conjunctival hyperemia. Untreated, it progresses to conjunctival scarring, eyelid deformity, and — with secondary bacterial infection — blindness."},
+  {t:"Genital tract disease", body:"C. trachomatis is a leading cause of sexually transmitted infection. In men it causes <b>non-gonococcal urethritis</b>; in women, urethritis, cervicitis, and <b>pelvic inflammatory disease</b>, which can lead to sterility and ectopic pregnancy. It targets endocervical/upper genital epithelium in women and urethral/rectal epithelium in both sexes."},
+  {t:"Neonatal transmission", body:"A newborn can acquire C. trachomatis while passing through an infected birth canal. An estimated <b>20–60%</b> of infants born to infected mothers become infected, most often presenting as neonatal conjunctivitis."},
+  {t:"Virulence factors of C. trachomatis", body:"<b>Tarp</b> drives actin rearrangement enabling endocytic uptake. The organism inserts proteins into the inclusion membrane to <b>block lysosomal fusion</b>, and secretes proteins that interfere with <b>NF-κB signaling</b>, blunting the innate inflammatory response."},
+  {t:"Diagnosis of C. trachomatis", body:"Specimens must include infected host cells, not just secretions, because chlamydiae are obligate intracellular organisms. <b>PCR (nucleic acid detection)</b> is the mainstay; culture is far less sensitive; serology is also used."},
+  {t:"Treatment of C. trachomatis", body:"<b>Azithromycin</b> is effective and safe in pregnancy. <b>Tetracyclines (e.g. doxycycline)</b> are commonly used for non-gonococcal urethritis and in non-pregnant infected women."},
+  {t:"Chlamydophila pneumoniae", body:"Humans are the only known host. Most infections are asymptomatic or mild, though severe disease is reported. Both upper airway (pharyngitis, sinusitis, otitis media) and lower airway disease occur. Diagnosis mirrors C. trachomatis; treatment is <b>macrolides, tetracyclines, or some fluoroquinolones</b>."},
+  {t:"Chlamydia psittaci — psittacosis", body:"Acquired from birds; enters via the respiratory tract. Clinical spectrum ranges from mild, inapparent infection to severe pneumonia and sepsis with mortality up to <b>20% in untreated cases</b>, especially the elderly. Causes patchy pulmonary inflammation; liver, spleen, heart and kidney are often enlarged."},
+  {t:"Diagnosing & treating psittacosis", body:"Culturing C. psittaci is dangerous, so <b>immunoassay or PCR</b> is preferred, and most cases are treated on clinical grounds alone. Treatment: azithromycin, clarithromycin, erythromycin, and doxycycline in adults."},
+  {t:"Actinomycetes — overview", body:"Anaerobic, Gram-positive bacteria colonizing the mouth, digestive and genital tracts. They form branching filamentous networks resembling fungi, though they are true bacteria. Most are soil saprophytes or human commensals; can be infected by bacteriophages called <b>actinophages</b>. Key genera: Actinomyces, Nocardia, Actinomadura, Streptomyces."},
+  {t:"Actinomycosis pathogenesis", body:"Infection is usually endogenous, triggered by trauma such as dental extraction. Bacteria penetrate the oral mucosa, grow anaerobically, provoke a mixed inflammatory response, and form a painless hard swelling with abscesses containing granules; infection can spread to bone. The <b>oral-cervicofacial form ('lumpy jaw')</b> is most common, presenting as a slow-growing painless mass with cutaneous fistulas."},
+  {t:"Sterilization vs disinfection", body:"<b>Sterilization</b> makes an item completely free of all microorganisms, vegetative or spore. <b>Disinfection</b> destroys pathogens/organisms capable of causing infection but does not guarantee spore destruction. A <b>disinfectant</b> is applied to non-living surfaces; an <b>antiseptic</b> is safe for living tissue."},
+  {t:"Physical sterilization methods", body:"Heat sterilization (moist heat below/at/above 100°C; dry heat via red heat, flaming, incineration, infrared, hot air oven), filtration (liquids and gases), irradiation (UV/non-ionizing and ionizing), sound waves, pressure (pascalization), and sunlight (solar disinfection)."},
+  {t:"Properties of an ideal disinfectant", body:"Wide spectrum of antimicrobial activity; effective in the presence of organic matter and at any pH; non-toxic, non-corrosive, non-allergenic, non-irritating; stable on storage; fast-acting with high penetrating power; and ideally soluble in both water and lipids."}
+];
+const mmIndex = document.getElementById('mmIndex');
+const mmViewer = document.getElementById('mmViewer');
+mmTopics.forEach((topic, i)=>{
+  const el = document.createElement('div');
+  el.className='mm-label';
+  el.innerHTML = `<span class="tag"></span>${topic.t}`;
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('.mm-label').forEach(l=>l.classList.remove('active'));
+    el.classList.add('active');
+    mmViewer.innerHTML = `<h3>${topic.t}</h3><div class="body">${topic.body}</div>`;
+  });
+  mmIndex.appendChild(el);
+});
+
+/* ---------------- Flash cards ---------------- */
+const flashcards = [
+  {cat:"general", q:"What are the three human-infecting Chlamydia species?", a:"Chlamydia trachomatis, Chlamydia pneumoniae, and Chlamydia psittaci."},
+  {cat:"general", q:"What is the chlamydial genus-specific antigen?", a:"A heat-stable lipopolysaccharide (LPS) containing 2-keto-3-deoxyoctanoic acid (KDO), detectable by immunofluorescence."},
+  {cat:"general", q:"Why are chlamydiae obligate intracellular parasites?", a:"They lack the mechanism to produce metabolic energy and cannot synthesize their own ATP."},
+  {cat:"general", q:"Name the two chlamydial developmental forms.", a:"The elementary body (EB) — infectious, extracellular; and the reticulate body (RB) — intracellular, replicating."},
+  {cat:"general", q:"Which form is metabolically inactive: EB or RB?", a:"The elementary body (EB)."},
+  {cat:"general", q:"Why is the RB called an 'energy parasite'?", a:"It synthesizes its own nucleic acid, lipids, and proteins, but not ATP — it depends on host ATP for survival."},
+  {cat:"general", q:"How does the EB appear on Giemsa stain?", a:"Purple, against blue-staining host cell cytoplasm."},
+  {cat:"general", q:"How does the RB appear on Giemsa stain?", a:"Blue, and it is larger and non-infective compared with the EB."},
+  {cat:"general", q:"Is Gram staining useful for identifying chlamydiae?", a:"No — the Gram stain reaction is negative or variable and is not useful for identification."},
+  {cat:"trachomatis", q:"Which serovars of C. trachomatis cause trachoma?", a:"Serovars A, B, and C."},
+  {cat:"trachomatis", q:"What is the incubation period for chlamydial conjunctival infection?", a:"3–10 days."},
+  {cat:"trachomatis", q:"What are the earliest symptoms of trachoma?", a:"Lacrimation, mucopurulent discharge, and conjunctival hyperemia."},
+  {cat:"trachomatis", q:"What can untreated trachoma progress to?", a:"Conjunctival scarring, eyelid deformities, and — with secondary bacterial infection — progressive loss of vision."},
+  {cat:"trachomatis", q:"What genital condition does C. trachomatis cause in men?", a:"Non-gonococcal urethritis."},
+  {cat:"trachomatis", q:"What genital conditions does C. trachomatis cause in women?", a:"Urethritis, cervicitis, and pelvic inflammatory disease (PID), which can cause sterility and predispose to ectopic pregnancy."},
+  {cat:"trachomatis", q:"What proportion of infants born to infected mothers acquire C. trachomatis?", a:"Roughly 20–60%."},
+  {cat:"trachomatis", q:"What does the Tarp protein do?", a:"It effects actin rearrangement and drives endocytic uptake of C. trachomatis."},
+  {cat:"trachomatis", q:"How does C. trachomatis avoid intracellular destruction?", a:"It inserts proteins into the inclusion (endosome) membrane that prevent fusion with host lysosomes."},
+  {cat:"trachomatis", q:"How does C. trachomatis blunt the innate immune response?", a:"It releases proteins into the cytoplasm that interfere with NF-κB signal transduction."},
+  {cat:"trachomatis", q:"What is the preferred lab test for C. trachomatis?", a:"PCR (nucleic acid detection) — more sensitive than culture."},
+  {cat:"trachomatis", q:"What antibiotic is safe in pregnancy for C. trachomatis?", a:"Azithromycin."},
+  {cat:"trachomatis", q:"What antibiotics are used for non-gonococcal urethritis in non-pregnant patients?", a:"Tetracyclines, e.g. doxycycline."},
+  {cat:"pneumoniae", q:"What is the natural host of C. pneumoniae?", a:"Humans — the only known host."},
+  {cat:"pneumoniae", q:"How do most C. pneumoniae infections present?", a:"Asymptomatic or with mild illness, though severe disease can occur."},
+  {cat:"pneumoniae", q:"What drugs treat C. pneumoniae?", a:"Macrolides and tetracyclines, and some fluoroquinolones."},
+  {cat:"psittaci", q:"What is psittacosis and how is it acquired?", a:"Human C. psittaci disease acquired from contact with birds; the agent enters via the respiratory tract."},
+  {cat:"psittaci", q:"What is the mortality of untreated psittacosis?", a:"Up to 20%, especially in the elderly."},
+  {cat:"psittaci", q:"Why is culturing C. psittaci discouraged?", a:"It is dangerous; immunoassay or PCR detection is preferred instead."},
+  {cat:"psittaci", q:"Which organs are often enlarged in psittacosis?", a:"Liver, spleen, heart, and kidney."},
+  {cat:"psittaci", q:"What antibiotics treat psittacosis?", a:"Azithromycin, clarithromycin, erythromycin, and doxycycline (in adults)."},
+  {cat:"actino", q:"What kind of bacteria are Actinomyces species?", a:"Anaerobic, Gram-positive bacteria that colonize the mouth, digestive and genital tracts."},
+  {cat:"actino", q:"What clinical condition do Actinomyces cause?", a:"Actinomycosis — a rare infectious disease that spreads from one body site to another, causing abscesses, pain and inflammation."},
+  {cat:"actino", q:"What triggers most actinomycosis infections?", a:"Trauma such as dental extraction, since the source is usually the patient's own oral commensal flora."},
+  {cat:"actino", q:"What is 'lumpy jaw'?", a:"The common name for oral-cervicofacial actinomycosis — a painless, slow-growing hard mass with cutaneous fistulas."},
+  {cat:"actino", q:"What viruses infect Actinomycetales bacteria?", a:"Bacteriophages specific to them, called actinophages."},
+  {cat:"actino", q:"Name four important genera in Actinomycetales.", a:"Actinomyces, Nocardia, Actinomadura, and Streptomyces."},
+  {cat:"steril", q:"Define sterilization.", a:"A process by which an article, surface or medium is made completely free of all microorganisms, in both vegetative and spore form."},
+  {cat:"steril", q:"Define disinfection.", a:"Destruction of pathogens/organisms capable of causing infection, but not necessarily their spores."},
+  {cat:"steril", q:"What's the difference between a disinfectant and an antiseptic?", a:"A disinfectant is applied to non-living surfaces; an antiseptic can safely be applied to living tissue."},
+  {cat:"steril", q:"Name the moist heat sterilization temperature ranges.", a:"Below 100°C, at 100°C, and above 100°C."},
+  {cat:"steril", q:"List the dry heat sterilization methods.", a:"Red heat, flaming, incineration, infrared radiation, and the hot air oven."},
+  {cat:"steril", q:"What two types of irradiation are used in sterilization?", a:"Ultraviolet (non-ionizing) radiation and ionizing radiation."},
+  {cat:"steril", q:"List three properties of an ideal disinfectant.", a:"Wide spectrum of activity, effective in presence of organic matter, and non-toxic/non-corrosive (plus stable, fast-acting, high penetrating power)."}
+];
+const fcGrid = document.getElementById('fcGrid');
+const fcFilter = document.getElementById('fcFilter');
+const fcCounter = document.getElementById('fcCounter');
+function renderFlashcards(){
+  const val = fcFilter.value;
+  fcGrid.innerHTML='';
+  const list = flashcards.filter(c => val==='all' || c.cat===val);
+  list.forEach(card=>{
+    const el = document.createElement('div');
+    el.className='fc-card';
+    el.innerHTML = `
+      <div class="fc-inner">
+        <div class="fc-face fc-front">
+          <div class="k">${labelForCat(card.cat)}</div>
+          <div class="q">${card.q}</div>
+          <div class="fc-hint">tap to flip</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="a">${card.a}</div>
+          <div class="fc-hint">tap to flip back</div>
+        </div>
+      </div>`;
+    el.addEventListener('click', ()=> el.classList.toggle('flipped'));
+    fcGrid.appendChild(el);
+  });
+  fcCounter.textContent = list.length + ' cards';
+}
+function labelForCat(c){
+  return {general:"Chlamydia · General", trachomatis:"C. trachomatis", pneumoniae:"C. pneumoniae",
+          psittaci:"C. psittaci", actino:"Actinomycetes", steril:"Sterilization"}[c] || c;
+}
+fcFilter.addEventListener('change', renderFlashcards);
+renderFlashcards();
+
+/* ---------------- Quiz Bank ---------------- */
+const quizData = [
+  {q:"How many human-infecting species of Chlamydia are recognized?", correct:"Three: C. trachomatis, C. pneumoniae, C. psittaci", wrong:["Two, split only by serology","Five, including animal-only strains","One species with several biovars"]},
+  {q:"What is the chemical basis of the chlamydial genus-specific antigen?", correct:"A heat-stable lipopolysaccharide containing KDO", wrong:["A heat-labile outer membrane protein","A capsular polysaccharide","A flagellar protein antigen"]},
+  {q:"Why are chlamydiae obligate intracellular organisms?", correct:"They cannot synthesize their own ATP", wrong:["They lack a cell wall entirely","They cannot survive above 20°C","They require sunlight for replication"]},
+  {q:"Which chlamydial form is infectious and extracellular?", correct:"The elementary body (EB)", wrong:["The reticulate body (RB)","The aberrant body","The spore form"]},
+  {q:"Which chlamydial form is metabolically active and replicates by binary fission?", correct:"The reticulate body (RB)", wrong:["The elementary body (EB)","The trophozoite","The conidium"]},
+  {q:"On Giemsa stain, what color does the elementary body appear?", correct:"Purple", wrong:["Blue","Green","Colorless"]},
+  {q:"On Giemsa stain, what color does the reticulate body appear?", correct:"Blue", wrong:["Purple","Red","Yellow"]},
+  {q:"Is the Gram stain useful for identifying chlamydiae?", correct:"No — it is negative or variable", wrong:["Yes — chlamydiae are reliably Gram-positive","Yes — chlamydiae are reliably Gram-negative","Only with a modified acid-fast stain"]},
+  {q:"Why are reticulate bodies described as 'energy parasites'?", correct:"They depend on host ATP despite making their own nucleic acids, lipids, and proteins", wrong:["They consume host glucose only, not ATP","They cannot make any macromolecules at all","They parasitize host mitochondria directly"]},
+  {q:"Which C. trachomatis serovars cause trachoma?", correct:"A, B, and C", wrong:["D through K","L1, L2, L3","All serovars equally"]},
+  {q:"What is the incubation period of chlamydial conjunctival infection?", correct:"3–10 days", wrong:["1–2 hours","30–45 days","6 months"]},
+  {q:"Which of the following is an early symptom of trachoma?", correct:"Mucopurulent discharge with conjunctival hyperemia", wrong:["Immediate corneal perforation","Painless vision loss with no discharge","High fever with rash"]},
+  {q:"Untreated trachoma with secondary bacterial infection can lead to:", correct:"Progressive vision loss over years", wrong:["Complete resolution within days","Permanent immunity to reinfection","Systemic sepsis in nearly all cases"]},
+  {q:"In sexually active men, C. trachomatis typically causes:", correct:"Non-gonococcal urethritis", wrong:["Prostatic abscess exclusively","Epididymitis only, never urethritis","Balanitis with no urethral involvement"]},
+  {q:"In women, C. trachomatis can cause all of the following EXCEPT:", correct:"Ovarian cysts", wrong:["Urethritis","Cervicitis","Pelvic inflammatory disease"]},
+  {q:"PID caused by C. trachomatis can predispose women to:", correct:"Ectopic pregnancy and sterility", wrong:["Twin pregnancy","Improved fertility","Ovarian cancer"]},
+  {q:"How is C. trachomatis usually transmitted to a newborn?", correct:"Passage through an infected birth canal during delivery", wrong:["Transplacental transfer in the first trimester","Breastfeeding only","Airborne transmission after birth"]},
+  {q:"Roughly what percentage of infants of infected mothers acquire C. trachomatis?", correct:"20–60%", wrong:["Less than 1%","Nearly 100%","About 5%"]},
+  {q:"The Tarp protein of C. trachomatis functions to:", correct:"Rearrange host actin and enable endocytic uptake of the organism", wrong:["Directly lyse the host cell membrane","Synthesize ATP for the bacterium","Bind antibodies to block immune recognition"]},
+  {q:"How does C. trachomatis avoid destruction inside the host cell?", correct:"It inserts proteins into the inclusion membrane that prevent lysosome fusion", wrong:["It hides inside host mitochondria","It becomes acid-fast to resist lysosomal enzymes","It secretes catalase to neutralize phagocytes only"]},
+  {q:"C. trachomatis interferes with which host signaling pathway to blunt innate immunity?", correct:"NF-κB", wrong:["mTOR", "JAK-STAT only", "Wnt/β-catenin"]},
+  {q:"What type of specimen is required for chlamydial testing, and why?", correct:"One containing infected host cells, because chlamydiae are obligate intracellular organisms", wrong:["Only cell-free serum, because chlamydiae circulate freely","Only stool, regardless of infection site","A blood culture bottle incubated aerobically"]},
+  {q:"What is the most sensitive laboratory method for detecting C. trachomatis?", correct:"PCR / nucleic acid detection", wrong:["Culture, which is more sensitive than PCR","Gram stain of a genital swab","Coagulase test"]},
+  {q:"Which antibiotic is preferred for C. trachomatis infection during pregnancy?", correct:"Azithromycin", wrong:["Doxycycline","Ciprofloxacin","Gentamicin"]},
+  {q:"Which drug class treats non-gonococcal urethritis in non-pregnant patients?", correct:"Tetracyclines (e.g. doxycycline)", wrong:["Aminoglycosides","Antifungals","First-generation cephalosporins"]},
+  {q:"What is the natural host of Chlamydophila pneumoniae?", correct:"Humans, the only known host", wrong:["Birds exclusively","Cats and dogs","Rodents"]},
+  {q:"Most C. pneumoniae infections present as:", correct:"Asymptomatic or mild illness", wrong:["Always fatal pneumonia","Severe hemorrhagic fever","Chronic meningitis"]},
+  {q:"Which drug classes treat C. pneumoniae?", correct:"Macrolides and tetracyclines", wrong:["Aminoglycosides only","Antivirals only","Sulfonamides alone"]},
+  {q:"Psittacosis in humans is acquired from:", correct:"Contact with birds", wrong:["Contaminated shellfish","Tick bites","Contact with cats only"]},
+  {q:"What is the approximate untreated mortality rate of psittacosis, especially in the elderly?", correct:"Up to 20%", wrong:["Nearly 0%","About 90%","Exactly 50%"]},
+  {q:"Why is culturing C. psittaci discouraged in the lab?", correct:"It is dangerous to laboratory personnel", wrong:["It never grows in culture","It is too slow to be useful","It requires refrigeration only"]},
+  {q:"Which organs are commonly enlarged in psittacosis?", correct:"Liver, spleen, heart, and kidney", wrong:["Only the lungs","Only the brain","Thyroid and pancreas"]},
+  {q:"Which of these is NOT typically used to treat psittacosis?", correct:"Penicillin G", wrong:["Azithromycin","Doxycycline","Erythromycin"]},
+  {q:"Actinomyces species are best described as:", correct:"Anaerobic, Gram-positive, branching filamentous bacteria", wrong:["Aerobic, Gram-negative cocci","Acid-fast, spore-forming rods","Gram-variable spirochetes"]},
+  {q:"What usually triggers actinomycosis?", correct:"Trauma such as dental extraction, allowing endogenous oral flora to invade", wrong:["Airborne droplet transmission from another patient","Consumption of unpasteurized dairy","Insect bites"]},
+  {q:"'Lumpy jaw' refers to which clinical presentation?", correct:"Oral-cervicofacial actinomycosis with cutaneous fistulas", wrong:["Pulmonary actinomycosis with hemoptysis","Abdominal actinomycosis after appendicitis","Pelvic actinomycosis with an IUD"]},
+  {q:"Bacteriophages that infect Actinomycetales are called:", correct:"Actinophages", wrong:["Mycophages","Actinoviruses","Filoviruses"]},
+  {q:"Which of the following is NOT listed as a key genus of Actinomycetales in this lecture?", correct:"Bacteroides", wrong:["Actinomyces","Nocardia","Streptomyces"]},
+  {q:"Sterilization is best defined as:", correct:"Complete elimination of all microbial life, including spores", wrong:["Reduction of microbial load by 50%","Killing only vegetative bacteria, sparing spores","Removing visible dirt from a surface"]},
+  {q:"Disinfection differs from sterilization because:", correct:"It destroys pathogens but does not guarantee destruction of spores", wrong:["It always uses higher temperatures than sterilization","It is only performed on living tissue","It is a purely mechanical process"]},
+  {q:"An antiseptic is distinguished from a disinfectant by being:", correct:"Safe to apply to living tissue", wrong:["Only usable on hospital floors","Only effective against viruses","Always more toxic than a disinfectant"]},
+  {q:"Which of these is a moist heat sterilization approach?", correct:"Autoclaving at or above 100°C", wrong:["Incineration", "Hot air oven", "UV irradiation"]},
+  {q:"Which method is classified under dry heat sterilization?", correct:"Hot air oven", wrong:["Autoclaving","Pasteurization","Filtration of liquids"]},
+  {q:"Filtration sterilization is typically used for:", correct:"Heat-sensitive liquids and gases", wrong:["Metal surgical instruments","Bulk soil samples","Bone implants"]},
+  {q:"Which two types of irradiation are used for sterilization?", correct:"Ultraviolet (non-ionizing) and ionizing radiation", wrong:["Infrared and microwave only","Only gamma radiation","Only X-rays"]},
+  {q:"Which of the following is listed as an ideal disinfectant property?", correct:"Remains active in the presence of organic matter", wrong:["Only works in a narrow pH range","Should be highly toxic to guarantee efficacy","Should evaporate quickly to avoid contact time"]},
+  {q:"A chemical strong enough to achieve full sterilization is called a:", correct:"Chemisterilant", wrong:["Bacteriostat","Fixative","Mordant"]}
+];
+
+let quizState = [];
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function buildQuiz(){
+  quizState = quizData.map(item=>{
+    const options = shuffle([
+      {text:item.correct, correct:true},
+      ...item.wrong.map(w=>({text:w, correct:false}))
+    ]);
+    return {q:item.q, options, answered:false};
+  });
+  renderQuiz();
+}
+function renderQuiz(){
+  const list = document.getElementById('quizList');
+  list.innerHTML='';
+  document.getElementById('scoreTotal').textContent = quizState.length;
+  quizState.forEach((item, idx)=>{
+    const card = document.createElement('div');
+    card.className='q-card';
+    const optsHtml = item.options.map((opt,oi)=>{
+      const letter = String.fromCharCode(65+oi);
+      return `<button class="q-opt" data-qi="${idx}" data-oi="${oi}"><span class="letter">${letter}</span><span>${opt.text}</span></button>`;
+    }).join('');
+    card.innerHTML = `<span class="qnum">Question ${idx+1} of ${quizState.length}</span>
+      <p class="qtext">${item.q}</p>
+      <div class="q-opts">${optsHtml}</div>`;
+    list.appendChild(card);
+  });
+  list.addEventListener('click', onQuizClick);
+  updateScore();
+}
+function onQuizClick(e){
+  const btn = e.target.closest('.q-opt');
+  if(!btn) return;
+  const qi = +btn.dataset.qi, oi = +btn.dataset.oi;
+  const item = quizState[qi];
+  if(item.answered) return;
+  item.answered = true;
+  const card = btn.closest('.q-card');
+  card.querySelectorAll('.q-opt').forEach((el,i)=>{
+    el.classList.add('disabled');
+    if(item.options[i].correct) el.classList.add('correct');
+    else if(i===oi) el.classList.add('wrong');
+  });
+  updateScore();
+}
+function updateScore(){
+  const answered = quizState.filter(i=>i.answered);
+  const correct = answered.filter(i=> i.options.find(o=>o.correct) && i.answered &&
+    document.querySelector(`.q-opt.correct[data-qi]`)); // placeholder, recompute simply below
+  let score = 0;
+  quizState.forEach((item, idx)=>{
+    if(item.answered){
+      const chosenWrong = document.querySelector(`.q-opt.wrong[data-qi="${idx}"]`);
+      if(!chosenWrong) score++;
+    }
+  });
+  document.getElementById('scoreVal').textContent = score;
+}
+document.getElementById('resetQuiz').addEventListener('click', buildQuiz);
+buildQuiz();
+</script>
+</body>
+</html>
